@@ -16,8 +16,11 @@ jobs:
         steps:
             - name: Checkout Repository
               uses: actions/checkout@v4
-            - name: Build Docker Image
-              run: "docker build -t nikhilj1402/flask-demo:$GITHUB_SHA ."
+            - name: Build Docker Image 
+              run: | 
+                docker build \ 
+                -t nikhilj1402/flask-demo:${{ github.sha }} \
+                ./flaskapp
 
         
 
