@@ -27,7 +27,7 @@ jobs:
                 password: "${{ secrets.DOCKER_PASSWORD }}"
 
             - name: push image to docker hub
-              run: "docker push nikhilj1402/flaskdemo:${ GITHUB_SHA:: 7 }"
+              run: "docker push ${{ secrets.DOCKER_USERNAME }}/flaskdemo:${{ github.sha }}"
 
             - name: install yq
               run: |
