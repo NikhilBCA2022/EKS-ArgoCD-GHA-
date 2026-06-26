@@ -37,7 +37,7 @@ jobs:
 
             - name: Update Image in Kubernetes Manifest 
               run: | 
-               yq -i '.spec.template.spec.containers[0].image = "nikhilj1402/flask-demo:cea805ee"' . k8s/py-app.yaml 
+               yq -i '.spec.template.spec.containers[0].image = "nikhilj1402/flask-demo:cea805ee"' k8s/py-app.yaml 
                
 
 
