@@ -111,7 +111,7 @@ HTML = """
 
 <div class="card">
 
-<h1>🚀 Flask + Docker</h1>
+<h1>🚀 Flask + Docker + K8s + CICD [GHA]</h1>
 
 <div class="badge">
 Application Running
