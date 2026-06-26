@@ -24,7 +24,7 @@ jobs:
                 password: "${{ secrets.DOCKER_PASSWORD }}"
 
             - name: push image to docker hub
-              run: "docker push ${{ secrets.DOCKER_USERNAME }}/flask-demo:v2-${GITHUB_SHA::7}"
+              run: "docker push ${{ secrets.DOCKER_USERNAME }}/nikhilj1402/flask-demo:v2-${GITHUB_SHA::7}"
 
             - name: install yq
               run: |
@@ -35,7 +35,7 @@ jobs:
             - name: Update Image in Kubernetes Manifest 
               run: | 
                yq -i '.spec.template.spec.containers[0].image = "nikhilj1402/flask-demo:cea805ee"' k8s/py-app.yml 
-               
+            
 
 
 
