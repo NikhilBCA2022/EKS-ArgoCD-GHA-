@@ -37,7 +37,7 @@ jobs:
 
             - name: Update Image in Kubernetes Manifest 
               run: | 
-               yq -i ' .spec.template.spec.containers[0].image = "nikhilj1402/flaskdemo:${{ github.sha }}" 
+               yq -i ' .spec.template.spec.containers[0].image = "${{ secrets.DOCKER_USERNAME }}/flaskdemo:${{ github.sha }}" 
                '. k8s/py-app.yml
 
 
