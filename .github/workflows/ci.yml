@@ -1,42 +1,60 @@
 name: Flask Docker CI
+
 on:
-    push:
-        branches:
-            - main
-env:
-    IMAGE_NAME: flask-demo
+  push:
+    branches:
+      - main
 
 jobs:
+  build-test-push:
 
-    build-test-push:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout Repository
-              uses: actions/checkout@v4
+    runs-on: ubuntu-latest
 
-            - name: Build Docker Image 
-              run: "docker build -t ${{ secrets.DOCKER_USERNAME }}/flask-demo-4:v5-${GITHUB_SHA::7} ./flaskapp"
+    steps:
 
-            - name: Login to docker hub
-              uses: docker/login-action@v3
-              with:
-                username: "${{ secrets.DOCKER_USERNAME }}"
-                password: "${{ secrets.DOCKER_PASSWORD }}"
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-            - name: push image to docker hub
-              run: "docker push ${{ secrets.DOCKER_USERNAME }}/flask-demo-4:v5-${GITHUB_SHA::7}"
+      - name: Docker Login
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-            - name: install yq
-              run: |
-               sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/local/bin/yq 
-               sudo chmod +x /usr/local/bin/yq 
-               yq --version
+      - name: Build Docker Image
+        run: |
+          docker build \
+          -t ${{ secrets.DOCKER_USERNAME }}/flask-demo-4:v6-${GITHUB_SHA::7} \
+          ./flaskapp
 
-            - name: Update Image in Kubernetes Manifest 
-              run: | 
-               yq -i '.spec.template.spec.containers[0].image = "nikhilj1402/flask-demo-4:v5-${GITHUB_SHA::7}"' k8s/py-app.yml 
-            
-            
+      - name: Push Docker Image
+        run: |
+          docker push \
+          ${{ secrets.DOCKER_USERNAME }}/flask-demo-4:v6-${GITHUB_SHA::7}
 
+      - name: Install yq
+        run: |
+          sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/local/bin/yq
+          sudo chmod +x /usr/local/bin/yq
 
+      - name: Update Kubernetes Manifest
+        run: |
+          yq -i \
+          '.spec.template.spec.containers[0].image = "nikhilj1402/flask-demo-4:v6-'${GITHUB_SHA::7}'"' \
+          k8s/py-app.yml
 
+      - name: Commit Updated Manifest
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+
+          git add k8s/py-app.yml
+
+          git diff --cached --quiet || \
+          git commit -m "Deploy v6-${GITHUB_SHA::7}"
+
+      - name: Push Manifest
+        run: |
+          git push origin main
