@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: flask-container
-          image: nikhilj1402/flask-demo-4:v6-011be1d
+          image: nikhilj1402/flask-demo-4:v6-561de55
           imagePullPolicy: Always
           ports:
             - containerPort: 5000
@@ -43,4 +43,4 @@ spec:
   template:
     spec:
       containers:
-        - image: nikhilj1402/flask-demo-4:v6-011be1d
+        - image: nikhilj1402/flask-demo-4:v6-561de55
