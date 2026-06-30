@@ -36,6 +36,7 @@ jobs:
               run: | 
                yq -i '.spec.template.spec.containers[0].image = "nikhilj1402/flask-demo-4:v5-${GITHUB_SHA::7}"' k8s/py-app.yml 
             
+            
 
 
 
