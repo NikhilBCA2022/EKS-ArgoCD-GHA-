@@ -46,11 +46,12 @@ jobs:
         sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/local/bin/yq
         sudo chmod +x /usr/local/bin/yq
 
-    - name: Update Manifest
+    - name: Update Kubernetes Manifest
       run: |
         yq -i '
+        select(.kind=="Deployment")
         .spec.template.spec.containers[0].image =
-        "nikhilj1402/flask-demo-4:'"${TAG}"'"
+        "nikhilj1402/flask-demo-4:v6-'${GITHUB_SHA::7}'"
         ' k8s/py-app.yml
 
     - name: Commit Manifest
